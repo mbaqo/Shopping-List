@@ -2,7 +2,7 @@ const itemForm = document.querySelector("#item-form");
 const itemInput = document.querySelector("#item-input");
 const itemList = document.querySelector("#item-list");
 const clearButton = document.querySelector("#clear");
-const filterItems = document.querySelector(".filter");
+const filter = document.querySelector(".filter");
 
 
 /* Adding Items */
@@ -68,15 +68,37 @@ function clearItems(e) {
     }
   }
 }
+
+/* Filtering Items */
+function filterItems(e) {
+  const items = itemList.querySelectorAll("li");
+
+  const text = e.target.value.toLowerCase();
+
+  items.forEach((item) => {
+    // trim removes the extra spaces in textContent
+    const itemName = item.firstChild.textContent.trim().toLowerCase();
+    if(!itemName.startsWith(text)) {
+      item.style.display = "none";
+    } else {
+      item.style.display = "";
+    }
+  });
+
+  // console.log(text);
+}
+
+
+
 //Checks if the item list is empty
 function checkUI() {
   const items = itemList.querySelectorAll("li");
   if (items.length === 0) {
     clearButton.style.display = "none";
-    filterItems.style.display = "none";
+    filter.style.display = "none";
   } else {
     clearButton.style.display = "block";
-    filterItems.style.display = "block";
+    filter.style.display = "block";
   }
 }
 
@@ -85,5 +107,6 @@ function checkUI() {
 itemForm.addEventListener("submit", addItem);
 itemList.addEventListener("click", removeItem);
 clearButton.addEventListener("click", clearItems);
+filter.addEventListener("input", filterItems);
 
 checkUI();
