@@ -7,7 +7,10 @@ const formButton = itemForm.querySelector("Button");
 let isEditMode = false;
 
 function displayItems() {
-  const itemsFromStorage = getItemsFromStorage();
+  while (itemList.firstChild) {
+    itemList.removeChild(itemList.firstChild);
+  }
+  const itemsFromStorage = getItemsFromStorage().sort();
   itemsFromStorage.forEach((item) => addItemToDOM(item));
   checkUI();
 }
@@ -33,17 +36,16 @@ function onAddItemSubmit(e) {
     itemToEdit.remove();
     isEditMode = false;
   } else {
-    if(checkIfItemExists(newItem)) {
+    if (checkIfItemExists(newItem)) {
       alert("That Item already Exists");
       return;
     }
   }
 
-  //create item DOM element
-  addItemToDOM(newItem);
-
   //Add item to local Storage
   addItemToStorage(newItem);
+
+  displayItems();
 
   checkUI();
 
@@ -109,8 +111,11 @@ function getItemsFromStorage() {
 /* Removing/Modifying Items */
 function onClickItem(e) {
   if (e.target.parentElement.classList.contains("remove-item")) {
+    if (isEditMode) {
+      itemInput.value = "";
+    }
     removeItem(e.target.parentElement.parentElement);
-  } else if (e.target.tagName === "LI"){
+  } else if (e.target.tagName === "LI") {
     setItemToEdit(e.target);
   }
 }
