@@ -104,6 +104,14 @@ header h1 {
   background-color: #f1f1f1;
 }
 
+.remove-item {
+  margin-top: 4px;
+}
+
+.remove-item i {
+  height: 100%;
+}
+
 .text-red {
   color: red;
 }
