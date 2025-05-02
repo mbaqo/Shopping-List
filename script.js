@@ -3,6 +3,8 @@ const itemInput = document.querySelector("#item-input");
 const itemList = document.querySelector("#item-list");
 const clearButton = document.querySelector("#clear");
 const filter = document.querySelector(".filter");
+const formButton = itemForm.querySelector("Button");
+let isEditMode = false;
 
 function displayItems() {
   const itemsFromStorage = getItemsFromStorage();
@@ -20,6 +22,16 @@ function onAddItemSubmit(e) {
   if (newItem === "") {
     alert("Please add an Item");
     return;
+  }
+
+  //Check for edit mode
+  if (isEditMode) {
+    const itemToEdit = itemList.querySelector(".edit-mode");
+
+    removeItemFromStorage(itemToEdit.textContent);
+    itemToEdit.classList.remove("edit-mode");
+    itemToEdit.remove();
+    isEditMode = false;
   }
 
   //create item DOM element
@@ -93,7 +105,23 @@ function getItemsFromStorage() {
 function onClickItem(e) {
   if (e.target.parentElement.classList.contains("remove-item")) {
     removeItem(e.target.parentElement.parentElement);
+  } else {
+    setItemToEdit(e.target);
   }
+}
+
+function setItemToEdit(item) {
+  isEditMode = true;
+
+  itemList.querySelectorAll("li").forEach(i => i.classList.remove("edit-mode"));
+  item.classList.add("edit-mode");
+  // Selects icon and changes its class
+  formButton.querySelector("i").className = "fa-solid fa-pen";
+  // Picks the text next to icon
+  formButton.classList.add("editBtn");
+  formButton.querySelector("span").textContent = "Update Item";
+  //Puts the list items text into form input
+  itemInput.value = item.textContent;
 }
 
 function removeItem(item) {
@@ -160,6 +188,10 @@ function checkUI() {
     clearButton.style.display = "block";
     filter.style.display = "block";
   }
+
+  isEditMode = false;
+  formButton.classList.remove("editBtn");
+  formButton.querySelector("span").textContent = "Add Item";
 }
 
 /* Initialize App */
